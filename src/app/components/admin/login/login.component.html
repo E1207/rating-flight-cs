@@ -1,0 +1,45 @@
+<div class="login-container">
+  <div class="login-header">
+    <h2>Connexion Admin</h2>
+    <button class="back-button" (click)="goBackToHome()">← Retour</button>
+  </div>
+  
+  <form (ngSubmit)="login()" class="login-form">
+    <div class="form-group">
+      <label for="username">Nom d'utilisateur</label>
+      <input 
+        id="username"
+        type="text" 
+        placeholder="admin" 
+        [(ngModel)]="username" 
+        name="username"
+        required
+        [disabled]="loading" />
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Mot de passe</label>
+      <input 
+        id="password"
+        type="password" 
+        placeholder="Mot de passe" 
+        [(ngModel)]="password" 
+        name="password"
+        required
+        [disabled]="loading" />
+    </div>
+    
+    <button type="submit" class="login-button" [disabled]="loading || !username || !password">
+      <span *ngIf="loading">Connexion...</span>
+      <span *ngIf="!loading">Se connecter</span>
+    </button>
+    
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+  </form>
+  
+  <div class="login-info">
+    <p><strong>Identifiants de test :</strong></p>
+    <p>Utilisateur : <code>admin</code></p>
+    <p>Mot de passe : <code>admin123</code></p>
+  </div>
+</div>

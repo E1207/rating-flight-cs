@@ -1,0 +1,25 @@
+<div class="container">
+    <nav class="top-nav">
+        <div class="nav-left">
+            <h1 class="app-title">✈️ Avis de Vol</h1>
+        </div>
+        <div class="nav-right">
+            <!-- Affichage conditionnel selon l'état d'authentification -->
+            <div *ngIf="!(authService.isAuthenticated$ | async); else authenticatedMenu">
+                <a routerLink="/login" class="admin-link">🔐 Connexion Admin</a>
+            </div>
+            
+            <ng-template #authenticatedMenu>
+                <div class="authenticated-menu">
+                    <span class="welcome-text">
+                        👋 Bonjour {{ (authService.currentUser$ | async)?.username }}
+                    </span>
+                    <a routerLink="/avis" class="nav-link">📋 Gestion des avis</a>
+                    <button class="logout-button" (click)="logout()">🔓 Déconnexion</button>
+                </div>
+            </ng-template>
+        </div>
+    </nav>
+    <router-outlet></router-outlet>
+</div>
+

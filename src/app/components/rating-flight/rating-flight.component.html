@@ -1,0 +1,55 @@
+<form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" aria-labelledby="reviewFormTitle" class="review-form">
+  <h2 id="reviewFormTitle">Laisser un avis sur votre vol</h2>
+  
+  <div class="form-actions-top">
+    <button type="button" class="view-reviews-button" (click)="goToRatingList()">
+      📝 Consulter autres avis
+    </button>
+  </div>
+  <div class="form-group">
+    <label for="flightNumber">Numéro de vol</label>
+    <input id="flightNumber" formControlName="flightNumber" type="text" required aria-required="true" placeholder="Ex: AF1234, LH4567..." />
+    <div *ngIf="hasError('flightNumber')" class="error-message">{{ getErrorMessage('flightNumber') }}</div>
+  </div>
+  <div class="form-group">
+    <label for="flightDate">Date du vol</label>
+    <input id="flightDate" formControlName="flightDate" type="date" required aria-required="true" />
+    <div *ngIf="hasError('flightDate')" class="error-message">{{ getErrorMessage('flightDate') }}</div>
+  </div>
+  <div class="form-group">
+    <label for="airline">Compagnie aérienne</label>
+    <select id="airline" formControlName="airline" required aria-required="true">
+      <option value="" disabled selected hidden>Choisir une compagnie</option>
+      <option *ngFor="let airline of airlines" [value]="airline">{{ airline }}</option>
+    </select>
+    <div *ngIf="hasError('airline')" class="error-message">{{ getErrorMessage('airline') }}</div>
+  </div>
+  <div class="form-group">
+    <label for="rating">Note</label>
+    <div class="star-rating" role="radiogroup" aria-labelledby="ratingLabel">
+      <span id="ratingLabel" class="sr-only">Note de 1 à 5 étoiles</span>
+      <ng-container *ngFor="let star of [1,2,3,4,5]">
+        <input type="radio" [id]="'star' + star" formControlName="rating" [value]="star" [attr.aria-checked]="reviewForm.value.rating === star" />
+        <label [for]="'star' + star" [class.filled]="reviewForm.value.rating >= star" [attr.aria-label]="star + ' étoile' + (star > 1 ? 's' : '')">&#9733;</label>
+      </ng-container>
+    </div>
+    <div *ngIf="hasError('rating')" class="error-message">{{ getErrorMessage('rating') }}</div>
+  </div>
+  <div class="form-group">
+    <label for="comment">Commentaire</label>
+    <textarea id="comment" formControlName="comment" rows="4" maxlength="1000" required aria-required="true"></textarea>
+    <div *ngIf="hasError('comment')" class="error-message">{{ getErrorMessage('comment') }}</div>
+  </div>
+  <button type="submit" [disabled]="reviewForm.invalid || loading">
+    <span *ngIf="loading">Envoi en cours...</span>
+    <span *ngIf="!loading">Envoyer l'avis</span>
+  </button>
+  
+  <div *ngIf="success" class="success-message" role="status">
+    Merci pour votre avis ! Il a été sauvegardé avec succès.
+  </div>
+  
+  <div *ngIf="submitted && !success && !loading" class="error-message" role="alert">
+    Une erreur s'est produite lors de la sauvegarde. Veuillez réessayer.
+  </div>
+</form>
