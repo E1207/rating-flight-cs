@@ -1,0 +1,256 @@
+.rate-detail-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.back-button {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+/* États */
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.error button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Contenu principal */
+.rate-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.main-info h2 {
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.main-info p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.flight-date {
+  font-weight: 600;
+}
+
+/* Section note */
+.rating-section {
+  margin: 25px 0;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.star {
+  font-size: 20px;
+  color: #ddd;
+}
+
+.star.filled {
+  color: #ffc107;
+}
+
+.rating-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.comment h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.comment p {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  border-left: 3px solid #007bff;
+  margin: 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Section statut */
+.status-section {
+  margin: 25px 0;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+}
+
+.status-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pending { background-color: #ffc107; color: #212529; }
+.status-published { background-color: #28a745; color: white; }
+.status-processed { background-color: #17a2b8; color: white; }
+.status-rejected { background-color: #dc3545; color: white; }
+
+.status-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.status-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-publish {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-publish:hover {
+  background-color: #218838;
+}
+
+.btn-process {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-process:hover {
+  background-color: #138496;
+}
+
+.btn-reject {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-reject:hover {
+  background-color: #c82333;
+}
+
+/* Section réponses */
+.responses {
+  margin: 25px 0;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+}
+
+.responses h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.response {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border-left: 3px solid #28a745;
+}
+
+.response p {
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+}
+
+.response small {
+  color: #666;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rate-detail-container {
+    margin: 10px;
+    padding: 15px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .header h1 {
+    font-size: 20px;
+  }
+  
+  .rate-content {
+    padding: 20px;
+  }
+  
+  .status-buttons {
+    flex-direction: column;
+  }
+  
+  .status-buttons button {
+    width: 100%;
+  }
+}

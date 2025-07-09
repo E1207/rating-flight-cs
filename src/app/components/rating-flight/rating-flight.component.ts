@@ -1,24 +1,24 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RateService } from '../../services/rate.service';
 import { Rate } from '../../models/rate.model';
-import { Flight } from '../../models/flight.model';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
-  selector: 'app-rating-flight',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
-  templateUrl: './rating-flight.component.html',
-  styleUrls: ['./rating-flight.component.scss']
+    selector: 'app-rating-flight',
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './rating-flight.component.html',
+    styleUrls: ['./rating-flight.component.scss']
 })
 export class RatingFlightComponent {
   reviewForm: FormGroup;
-  submitted = false;
-  success = false;
-  loading = false;
+  submitted = signal(false);
+  success = signal(false);
+  loading = signal(false);
+  rateService = inject(RateService);
+  router = inject(Router);
 
   airlines = [
     'Air France',
@@ -33,7 +33,7 @@ export class RatingFlightComponent {
     'Iberia'
   ];
 
-  constructor(private fb: FormBuilder, private rateService: RateService, private router: Router) {
+  constructor(private fb: FormBuilder) {
     this.reviewForm = this.fb.group({
       flightNumber: ['', Validators.required],
       flightDate: ['', Validators.required],
@@ -41,13 +41,23 @@ export class RatingFlightComponent {
       rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
       comment: ['', [Validators.required, Validators.maxLength(1000)]]
     });
+
+    effect(() => {
+      if (this.success()) {
+        setTimeout(() => {
+          this.reviewForm.reset();
+          this.submitted.set(false);
+        }, 100);
+      }
+    });
   }
 
   onSubmit() {
+    this.submitted.set(true);
+    
     if (this.reviewForm.valid) {
-      this.submitted = true;
-      this.loading = true;
-      this.success = false;
+      this.loading.set(true);
+      this.success.set(false);
 
       const rateData: Rate = {
         rating: this.reviewForm.value.rating,
@@ -59,57 +69,39 @@ export class RatingFlightComponent {
       };
 
       this.rateService.createRate(rateData).subscribe({
-        next: (response) => {
-          this.success = true;
-          this.loading = false;
-          this.reviewForm.reset();
-          this.submitted = false;
-          console.log('Avis sauvegardé avec succès:', response);
+        next: () => {
+          this.success.set(true);
+          this.loading.set(false);
         },
-        error: (error) => {
-          this.loading = false;
-          this.success = false;
-          console.error('Erreur lors de la sauvegarde:', error);
-          console.log('Date de soumission:', formatDate(new Date().toISOString(), 'yyyy-MM-dd HH:mm:ss', 'en-US'));
+        error: () => {
+          this.loading.set(false);
+          this.success.set(false);
         }
-      });
-    } else {
-      this.submitted = true;
-      // Marquer tous les champs comme touchés pour afficher les erreurs
-      Object.keys(this.reviewForm.controls).forEach(key => {
-        this.reviewForm.get(key)?.markAsTouched();
       });
     }
   }
 
-  // Méthode pour vérifier si un champ a une erreur
-  hasError(fieldName: string): boolean {
-    const field = this.reviewForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched || this.submitted));
-  }
-
-  // Méthode pour obtenir le message d'erreur d'un champ
   getErrorMessage(fieldName: string): string {
     const field = this.reviewForm.get(fieldName);
-    if (field?.errors) {
-      if (field.errors['required']) {
+    if (field && field.invalid && (field.touched || this.submitted())) {
+      if (field.errors?.['required']) {
         return 'Ce champ est obligatoire';
       }
-      if (field.errors['min']) {
-        return 'La note doit être au minimum de 1';
+      if (field.errors?.['min']) {
+        return 'Veuillez donner une note';
       }
-      if (field.errors['max']) {
-        return 'La note doit être au maximum de 5';
-      }
-      if (field.errors['maxlength']) {
-        return `Maximum ${field.errors['maxlength'].requiredLength} caractères`;
+      if (field.errors?.['maxlength']) {
+        return 'Commentaire trop long (maximum 1000 caractères)';
       }
     }
     return '';
   }
 
-  // Méthode pour naviguer vers la liste des avis
   goToRatingList(): void {
     this.router.navigate(['/avis']);
+  }
+
+  goToHome(): void {
+    this.router.navigate(['/']);
   }
 }

@@ -14,7 +14,7 @@
         [(ngModel)]="username" 
         name="username"
         required
-        [disabled]="loading" />
+        [disabled]="connected" />
     </div>
     
     <div class="form-group">
@@ -26,20 +26,25 @@
         [(ngModel)]="password" 
         name="password"
         required
-        [disabled]="loading" />
+        [disabled]="connected" />
     </div>
     
-    <button type="submit" class="login-button" [disabled]="loading || !username || !password">
-      <span *ngIf="loading">Connexion...</span>
-      <span *ngIf="!loading">Se connecter</span>
+    <button type="submit" class="login-button" [disabled]="connected || !username || !password">
+      @if (connected) {
+        <span>Connexion...</span>
+      } @else {
+        <span>Se connecter</span>
+      }
     </button>
     
-    <div *ngIf="error" class="error-message">{{ error }}</div>
+    @if (error) {
+      <div class="error-message">{{ error }}</div>
+    }
   </form>
   
   <div class="login-info">
     <p><strong>Identifiants de test :</strong></p>
-    <p>Utilisateur : <code>admin</code></p>
-    <p>Mot de passe : <code>admin123</code></p>
+    <p>Utilisateur : admin</p>
+    <p>Mot de passe : admin123</p>
   </div>
 </div>

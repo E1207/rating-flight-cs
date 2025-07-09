@@ -1,0 +1,128 @@
+<div class="home-container">
+  <section class="hero-section" aria-labelledby="hero-title">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 id="hero-title" class="hero-title">
+          ✈️ RatingFlight
+        </h1>
+        <p class="hero-subtitle">
+          Partagez votre expérience de vol et aidez d'autres voyageurs à faire le bon choix
+        </p>
+        <div class="hero-buttons" role="group" aria-label="Actions principales">
+          <button class="btn btn-primary" (click)="navigateToForm()" 
+                  aria-label="Accéder au formulaire pour donner votre avis de vol">
+            📝 Donner mon avis
+          </button>
+          <button class="btn btn-secondary" (click)="navigateToRatingList()"
+                  aria-label="Consulter la liste des avis de vols existants">
+            👁️ Consulter les avis
+          </button>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="assets/flight.jpg" alt="Avion commercial volant dans un ciel bleu avec des nuages blancs" class="flight-image">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" aria-labelledby="features-title">
+    <div class="container">
+      <h2 id="features-title" class="section-title">Pourquoi utiliser RatingFlight ?</h2>
+      <div class="features-grid" role="list">
+        <div class="feature-card" role="listitem">
+          <div class="feature-icon" aria-hidden="true">⭐</div>
+          <h3>Avis authentiques</h3>
+          <p>Des évaluations réelles de voyageurs comme vous pour vous aider dans vos choix</p>
+        </div>
+        <div class="feature-card" role="listitem">
+          <div class="feature-icon" aria-hidden="true">🔍</div>
+          <h3>Recherche facile</h3>
+          <p>Trouvez rapidement les avis par compagnie, numéro de vol ou destination</p>
+        </div>
+        <div class="feature-card" role="listitem">
+          <div class="feature-icon" aria-hidden="true">💬</div>
+          <h3>Réponses officielles</h3>
+          <p>Les compagnies aériennes peuvent répondre directement à vos commentaires</p>
+        </div>
+        <div class="feature-card" role="listitem">
+          <div class="feature-icon" aria-hidden="true">🛡️</div>
+          <h3>Modération</h3>
+          <p>Tous les avis sont modérés pour garantir la qualité et la pertinence</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="stats-section" aria-labelledby="stats-title">
+    <div class="container">
+      <h2 id="stats-title" class="section-title">RatingFlight en chiffres</h2>
+      <div class="stats-grid" role="list" aria-label="Statistiques de la plateforme">
+        <div class="stat-item" role="listitem">
+          <div class="stat-number" aria-label="1250 avis publiés ou plus">1,250+</div>
+          <div class="stat-label">Avis publiés</div>
+        </div>
+        <div class="stat-item" role="listitem">
+          <div class="stat-number" aria-label="85 compagnies évaluées">85</div>
+          <div class="stat-label">Compagnies évaluées</div>
+        </div>
+        <div class="stat-item" role="listitem">
+          <div class="stat-number" aria-label="Note moyenne de 4,2 sur 5">4.2/5</div>
+          <div class="stat-label">Note moyenne</div>
+        </div>
+        <div class="stat-item" role="listitem">
+          <div class="stat-number" aria-label="95 pourcent de satisfaction utilisateurs">95%</div>
+          <div class="stat-label">Satisfaction utilisateurs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section" aria-labelledby="cta-title">
+    <div class="container">
+      <div class="cta-content">
+        <h2 id="cta-title">Prêt à partager votre expérience ?</h2>
+        <p>Votre avis compte et aide la communauté des voyageurs</p>
+        <button class="btn btn-primary btn-large" (click)="navigateToForm()"
+                aria-label="Commencer à rédiger votre avis de vol maintenant">
+          🚀 Commencer maintenant
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo" aria-labelledby="footer-title">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4 id="footer-title">RatingFlight</h4>
+          <p>La plateforme de référence pour les avis de vols</p>
+        </div>
+        <div class="footer-section">
+          <h4>Liens utiles</h4>
+          <nav aria-label="Liens du footer">
+            <ul>
+              <li><a href="#" (click)="navigateToRatingList()" 
+                     aria-label="Accéder à la page de tous les avis de vols">Tous les avis</a></li>
+              <li><a href="#" (click)="navigateToForm()"
+                     aria-label="Accéder au formulaire pour déposer un avis">Déposer un avis</a></li>
+              <li><a href="#" (click)="navigateToLogin()"
+                     aria-label="Accéder à l'espace d'administration">Espace admin</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>Une question ? Contactez-nous !</p>
+          <p aria-label="Adresse email de contact">📧 contact&#64;ratingflight.com</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 RatingFlight. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+</div>

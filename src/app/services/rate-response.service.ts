@@ -17,9 +17,6 @@ export class RateResponseService {
     const requestBody: CreateRateResponseRequest = {
       response: response
     };
-    
-    // Temporaire : utiliser l'endpoint existant si disponible
-    // Remplacez par l'URL correcte de votre API
     return this.http.post<RateResponse>(`${this.apiUrl}/${rateId}/responses`, requestBody);
   }
 

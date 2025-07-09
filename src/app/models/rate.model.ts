@@ -1,4 +1,5 @@
 import { RateResponse } from "./RateResponse.model";
+import { RateStatus } from "./rate-status.model";
 
 export interface Rate {
   id?: number;
@@ -8,5 +9,6 @@ export interface Rate {
   company: string;
   flightDate: string;
   submittedAt?: string;
+  status?: RateStatus;
   rateResponse?: RateResponse[];
 }

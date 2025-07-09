@@ -1,57 +1,67 @@
-<div *ngIf="isVisible" class="popup-overlay" (click)="onBackdropClick($event)">
-  <div class="popup-container">
-    <div class="popup-header">
-      <h3>Répondre à l'avis</h3>
-      <button class="close-button" (click)="onCancel()" type="button">✕</button>
-    </div>
-    
-    <div class="popup-content">
-      <div class="rate-info">
-        <p><strong>Vol :</strong> {{ flightNumber }}</p>
-        <p><strong>Compagnie :</strong> {{ company }}</p>
+@if (isVisible()) {
+  <div class="popup-overlay" (click)="onBackdropClick($event)">
+    <div class="popup-container">
+      <div class="popup-header">
+        <h3>Répondre à l'avis</h3>
+        <button class="close-button" (click)="onCancel()" type="button">✕</button>
       </div>
       
-      <form [formGroup]="responseForm" (ngSubmit)="onSubmit()" class="response-form">
-        <div class="form-group">
-          <label for="response">Votre réponse</label>
-          <textarea 
-            id="response"
-            formControlName="response"
-            rows="6"
-            placeholder="Rédigez votre réponse à cet avis..."
-            [disabled]="isSubmitting">
-          </textarea>
-          <div class="character-count">
-            {{ responseForm.get('response')?.value?.length || 0 }} / 1000 caractères
-          </div>
-          <div *ngIf="responseForm.get('response')?.errors?.['required'] && responseForm.get('response')?.touched" 
-               class="field-error">
-            Ce champ est obligatoire
-          </div>
-          <div *ngIf="responseForm.get('response')?.errors?.['minlength']" 
-               class="field-error">
-            La réponse doit contenir au moins 10 caractères
-          </div>
-          <div *ngIf="responseForm.get('response')?.errors?.['maxlength']" 
-               class="field-error">
-            La réponse ne peut pas dépasser 1000 caractères
-          </div>
+      <div class="popup-content">
+        <div class="rate-info">
+          <p><strong>Vol :</strong> {{ flightNumber() }}</p>
+          <p><strong>Compagnie :</strong> {{ company() }}</p>
         </div>
         
-        <div *ngIf="error" class="error-message">
-          {{ error }}
-        </div>
-        
-        <div class="popup-actions">
-          <button type="button" class="cancel-button" (click)="onCancel()" [disabled]="isSubmitting">
-            Annuler
-          </button>
-          <button type="submit" class="submit-button" [disabled]="responseForm.invalid || isSubmitting">
-            <span *ngIf="isSubmitting">Envoi...</span>
-            <span *ngIf="!isSubmitting">Envoyer la réponse</span>
-          </button>
-        </div>
-      </form>
+        <form [formGroup]="responseForm" (ngSubmit)="onSubmit()" class="response-form">
+          <div class="form-group">
+            <label for="response">Votre réponse</label>
+            <textarea 
+              id="response"
+              formControlName="response"
+              rows="6"
+              placeholder="Rédigez votre réponse à cet avis..."
+              [disabled]="isSubmitting()">
+            </textarea>
+            <div class="character-count">
+              {{ responseForm.get('response')?.value?.length || 0 }} / 1000 caractères
+            </div>
+            @if (responseForm.get('response')?.errors?.['required'] && responseForm.get('response')?.touched) {
+              <div class="field-error">
+                Ce champ est obligatoire
+              </div>
+            }
+            @if (responseForm.get('response')?.errors?.['minlength']) {
+              <div class="field-error">
+                La réponse doit contenir au moins 10 caractères
+              </div>
+            }
+            @if (responseForm.get('response')?.errors?.['maxlength']) {
+              <div class="field-error">
+                La réponse ne peut pas dépasser 1000 caractères
+              </div>
+            }
+          </div>
+          
+          @if (error()) {
+            <div class="error-message">
+              {{ error() }}
+            </div>
+          }
+          
+          <div class="popup-actions">
+            <button type="button" class="cancel-button" (click)="onCancel()" [disabled]="isSubmitting()">
+              Annuler
+            </button>
+            <button type="submit" class="submit-button" [disabled]="responseForm.invalid || isSubmitting()">
+              @if (isSubmitting()) {
+                <span>Envoi...</span>
+              } @else {
+                <span>Envoyer la réponse</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+}

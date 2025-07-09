@@ -2,83 +2,213 @@
   <div class="header">
     <h2>Tous les avis sur les vols</h2>
     <div class="header-actions">
-      <button *ngIf="isAdmin" class="logout-button" (click)="logout()">
-        🔓 Se déconnecter
-      </button>
-      <button class="back-button" (click)="goBackToForm()">
-        ← Retour au formulaire
-      </button>
+      @if (!authService.isAdmin) {
+        <button class="back-button" (click)="goBackToForm()">
+          ✏️ Donner un avis
+        </button>
+      }
+      
+      <!-- Champs de filtres -->
+      <div class="filters-container">
+        <!-- Recherche par mot-clé -->
+        <input 
+          type="text" 
+          class="filter-input" 
+          placeholder="Rechercher dans les commentaires..."
+          [ngModel]="searchKeyword()"
+          (ngModelChange)="updateKeywordFilter($event)">
+
+        <!-- Filtre par compagnie -->
+        <select 
+          class="filter-select" 
+          [ngModel]="selectedCompany()"
+          (ngModelChange)="updateCompanyFilter($event)">
+          <option value="">Toutes les compagnies</option>
+          @for (company of uniqueCompanies(); track company) {
+            <option [value]="company">{{ company }}</option>
+          }
+        </select>
+
+        <!-- Filtre par numéro de vol -->
+        <select 
+          class="filter-select" 
+          [ngModel]="selectedFlightNumber()"
+          (ngModelChange)="updateFlightNumberFilter($event)">
+          <option value="">Tous les vols</option>
+          @for (flightNumber of uniqueFlightNumbers(); track flightNumber) {
+            <option [value]="flightNumber">{{ flightNumber }}</option>
+          }
+        </select>
+
+        <!-- Filtre par statut (seulement pour les admins) -->
+        @if (authService.isAdmin) {
+          <select 
+            class="filter-select" 
+            [ngModel]="selectedStatus()"
+            (ngModelChange)="updateStatusFilter($event)">
+            @for (statusOption of statusOptions; track statusOption.value) {
+              <option [value]="statusOption.value">{{ statusOption.label }}</option>
+            }
+          </select>
+        }
+
+        <!-- Filtre par date du jour -->
+        <label class="filter-checkbox">
+          <input 
+            type="checkbox" 
+            [ngModel]="showTodayOnly()"
+            (ngModelChange)="showTodayOnly.set($event)">
+          Vols d'aujourd'hui
+        </label>
+
+        <!-- Bouton effacer filtres -->
+        <button 
+          class="clear-filters-button" 
+          (click)="clearAllFilters()"
+          [disabled]="!searchKeyword() && !selectedCompany() && !selectedFlightNumber() && !selectedStatus() && !showTodayOnly()"
+          title="Effacer tous les filtres">
+          ✕
+        </button>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="loading" class="loading-message">
-    <p>Chargement des avis...</p>
-  </div>
+  @if (loading()) {
+    <div class="loading-message">
+      <p>Chargement des avis...</p>
+    </div>
+  }
 
-  <div *ngIf="error && !loading" class="error-message">
-    <p>Erreur lors du chargement des avis. Veuillez réessayer.</p>
-    <button (click)="loadRates()" class="retry-button">Réessayer</button>
-  </div>
+  @if (error() && !loading()) {
+    <div class="error-message">
+      <p>Erreur lors du chargement des avis. Veuillez réessayer.</p>
+      <button (click)="loadRates()" class="retry-button">Réessayer</button>
+    </div>
+  }
 
-  <div *ngIf="!loading && !error && rates.length === 0" class="no-rates-message">
-    <p>Aucun avis n'a encore été publié.</p>
-    <button (click)="goBackToForm()" class="add-review-button">Ajouter le premier avis</button>
-  </div>
+  @if (!loading() && !error() && rates().length === 0) {
+    <div class="no-rates-message">
+      <p>Aucun avis n'a encore été publié.</p>
+      <button (click)="goBackToForm()" class="add-review-button">Ajouter le premier avis</button>
+    </div>
+  }
 
-  <div *ngIf="!loading && !error && rates.length > 0" class="rates-grid">
-    <div *ngFor="let rate of rates" class="rate-card">
-      <div class="rate-header">
-        <div class="flight-info">
-          <h3>Vol {{ rate.flightNumber }}</h3>
-          <p class="airline">{{ rate.company }}</p>
-          <p class="flight-date">Date du vol: {{ rate.flightDate }}</p>
-        </div>
-        <div class="rating-stars">
-          <span *ngFor="let star of getStarArray(rate.rating)" 
-                class="star" 
-                [class.filled]="star">
-            ★
-          </span>
-          <span class="rating-number">({{ rate.rating }}/5)</span>
-        </div>
-      </div>
-      
-      <div class="rate-content">
-        <p class="comment">{{ rate.comment }}</p>
-      </div>
+  @if (!loading() && !error() && rates().length > 0 && filteredRates().length === 0) {
+    <div class="no-rates-message">
+      <p>Aucun avis ne correspond à vos critères de recherche.</p>
+      <button (click)="clearAllFilters()" class="add-review-button">Effacer les filtres</button>
+    </div>
+  }
 
-      <!-- Section des réponses -->
-      <div *ngIf="rate.rateResponse && rate.rateResponse.length > 0" class="rate-responses">
-        <h4 class="responses-title">
-          {{ rate.rateResponse.length === 1 ? 'Réponse de la compagnie' : 'Réponses de la compagnie' }}
-        </h4>
-        <div *ngFor="let response of rate.rateResponse" class="response-item">
-          <div class="response-content">
-            <p class="response-text">{{ response.response }}</p>
-            <p class="response-date">{{ formatDate(response.responseAt) }}</p>
+  @if (!loading() && !error() && filteredRates().length > 0) {
+    <div class="rates-grid">
+      @for (rate of filteredRates(); track rate.id) {
+        <div class="rate-card">
+          <div class="rate-header">
+            <div class="flight-info">
+              <h3>Vol {{ rate.flightNumber }}</h3>
+              <p class="airline">{{ rate.company }}</p>
+              <p class="flight-date">Date du vol: {{ rate.flightDate }}</p>
+            </div>
+            <div class="rating-stars">
+              @for (star of getStarArray(rate.rating); track $index) {
+                <span class="star" [class.filled]="star">
+                  ★
+                </span>
+              }
+              <span class="rating-number">({{ rate.rating }}/5)</span>
+            </div>
+          </div>
+          
+          <div class="rate-content">
+            <p class="comment">{{ rate.comment }}</p>
+          </div>
+
+          <!-- Section des réponses -->
+          @if (rate.rateResponse && rate.rateResponse.length > 0) {
+            <div class="rate-responses">
+              <h4 class="responses-title">
+                {{ rate.rateResponse.length === 1 ? 'Réponse de la compagnie' : 'Réponses de la compagnie' }}
+              </h4>
+              @for (response of rate.rateResponse; track response.id) {
+                <div class="response-item">
+                  <div class="response-content">
+                    <p class="response-text">{{ response.response }}</p>
+                    <p class="response-date">{{ formatDate(response.responseAt) }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          
+          <div class="rate-footer">
+            <div class="footer-content">
+              <!-- Première ligne : Date de publication + Badge de statut + Boutons d'action -->
+              <div class="footer-top">
+                <div class="footer-left">
+                  <p class="submitted-date">
+                    Publié le {{ formatDate(rate.submittedAt ?? '') }}
+                  </p>
+                  <!-- Afficher le statut seulement s'il n'est pas PENDING et pour les admins -->
+                  @if (authService.isAdmin && rate.status && rate.status !== 'PENDING') {
+                    <span class="status-badge" [class]="getStatusClass(rate.status)">
+                      {{ getStatusLabel(rate.status) }}
+                    </span>
+                  }
+                </div>
+                <div class="footer-actions">
+                  <!-- Bouton "Voir détail" toujours visible -->
+                  <button class="detail-button" (click)="viewRateDetail(rate.id!)">
+                    👁️ Voir détail
+                  </button>
+                  
+                  @if (authService.isAdmin) {
+                    <button class="respond-button" (click)="respondToRate(rate.id!)">
+                      💬 Répondre
+                    </button>
+                  }
+                </div>
+              </div>
+              
+              <!-- Deuxième ligne : Boutons de gestion du statut (admin uniquement) -->
+              @if (authService.isAdmin) {
+                <div class="status-buttons">
+                  @if (rate.status !== 'PUBLISHED') {
+                    <button 
+                      class="status-button status-publish" 
+                      (click)="updateRateStatus(rate.id!, 'PUBLISHED')"
+                      title="Publier l'avis">
+                      ✓ Publier
+                    </button>
+                  }
+                  @if (rate.status !== 'PROCESSED') {
+                    <button 
+                      class="status-button status-process" 
+                      (click)="updateRateStatus(rate.id!, 'PROCESSED')"
+                      title="Marquer comme traité">
+                      📋 Traité
+                    </button>
+                  }
+                  @if (rate.status !== 'REJECTED') {
+                    <button 
+                      class="status-button status-reject" 
+                      (click)="updateRateStatus(rate.id!, 'REJECTED')"
+                      title="Rejeter l'avis">
+                      ✗ Rejeter
+                    </button>
+                  }
+                </div>
+              }
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="rate-footer">
-        <div class="footer-content">
-          <p class="submitted-date">
-            Publié le {{ formatDate(rate.submittedAt ?? '') }}
-          </p>
-          <button *ngIf="isAdmin" class="respond-button" (click)="respondToRate(rate.id!)">
-            💬 Répondre
-          </button>
-        </div>
-      </div>
+      }
     </div>
-  </div>
+  }
 
   <!-- Popup de réponse -->
   <app-response-popup
-    [isVisible]="showResponsePopup"
-    [rateId]="selectedRateId"
-    [flightNumber]="selectedFlightNumber"
-    [company]="selectedCompany"
+    #responsePopup
     (closePopup)="closeResponsePopup()"
     (responseAdded)="onResponseAdded($event)">
   </app-response-popup>
