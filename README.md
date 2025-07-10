@@ -1,27 +1,66 @@
-# RatingFlightCs
+# rating-flight-cs Frontend : Dev Installation
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.10.
+Ce projet est une application de gestion des évaluations de vols, permettant aux utilisateurs de noter leurs expériences de vol et aux compagnies aériennes de répondre à ces évaluations.
 
-## Development server
+## I- Installation et Configuration
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### 1. Prérequis
+- Node.js 18 et plus (recommandé : version LTS)
+- npm 9 et plus
+- Angular CLI 17+
+- IDE (Visual Studio Code recommandé)
+- Git
 
-## Code scaffolding
+### 2. Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. Cloner le repository :
+```bash
+git clone https://github.com/E1207/rating-flight-cs.git
+```
+2. Import dans Visual Studio Code :
+- Ouvrir Visual Studio Code
+- Choisir "Open Folder" et sélectionner le répertoire cloné
+- VS Code détecte automatiquement le projet Angular
 
-## Build
+3. Installation des dépendances :
+- Ouvrir le terminal intégré 
+- Exécuter la commande : npm install
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+# Démarrage en mode développement
+ng serve
 
-## Running unit tests
+### II- Architecture
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+src/
+├── app/
+│   ├── components/         
+│   │   ├── home/           
+│   │   ├── rating-flight/  
+│   │   ├── rating-list/    
+│   │   ├── rate-detail/    
+│   │   └── admin/         
+│   ├── services/         
+│   ├── models/           
+│   ├── guards/           
+│   └── utils/           
+├── environments/        
+└── assets/           
 
-## Running end-to-end tests
+### 2. Aspects Techniques
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Pour ce qui est un peu plus technique côté angular nous avons utilisé :
+- Les composants en standalone , pour ne plus avoir à utiliser le ngModule, et avoir des composants plus autonomes
+- Les siganux, pour gérer les états ,  la performance de notre application
+- Le Guard Angular pour gérer les routes sécurisé et les rôles
+- La gestion des erreurs CORS depuis le backend, en acceptant les appels REST qui proviennent de notre Front
+- La gestion des Erreurs 
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## V- Utilisation de l'IA
+
+L'utilisation de L'IA pour la partie Frontend a été faite : 
+- Au niveau de style et de la Forme : principalement à ce niveau que j'ai utilisé l'IA, pour avoir un beau rendu visuel, respecter les normes d'accessibilité.
+- Pour m'expliquer comment je pouvais résoudre certains problèmes rencontrés ( notamment sur comment resoudre l'erreur CORS)
+- Pour faire du parsing de date un peu complexe
+- Pour gerer le model, simulaire au objet de back 
+
