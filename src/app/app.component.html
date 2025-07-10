@@ -1,0 +1,22 @@
+<div class="container">
+    <nav class="top-nav">
+        <div class="nav-left">
+            <h1 class="app-title" (click)="goToHome()">✈️ RatingFlight</h1>
+        </div>
+        <div class="nav-right">
+            <!-- Affichage conditionnel selon l'état d'authentification -->
+            @if (!authService.isAuthenticated) {
+                <a routerLink="/login" class="admin-link">🔐 Connexion Admin</a>
+            } @else {
+                <div class="authenticated-menu">
+                    <span class="welcome-text">
+                        👋 Bonjour Admin
+                    </span>
+                    <button class="logout-button" (click)="logout()">🔓 Déconnexion</button>
+                </div>
+            }
+        </div>
+    </nav>
+    <router-outlet></router-outlet>
+</div>
+

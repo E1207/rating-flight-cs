@@ -1,0 +1,66 @@
+<div class="rate-detail-container">
+  <!-- En-tête simple -->
+  <div class="header">
+    <button class="back-button" (click)="goBack()">
+      ← Retour
+    </button>
+    <h1>Détail de l'avis</h1>
+  </div>
+
+  <!-- Chargement -->
+  @if (loading()) {
+    <div class="loading">
+      <p>Chargement...</p>
+    </div>
+  }
+
+  <!-- Erreur -->
+  @if (error() && !loading()) {
+    <div class="error">
+      <p>{{ errorMessage() }}</p>
+      <button (click)="goBack()">Retour</button>
+    </div>
+  }
+
+  <!-- Contenu de l'avis -->
+  @if (!loading() && !error() && rate()) {
+    <div class="rate-content">
+      
+      <!-- Informations principales -->
+      <div class="main-info">
+        <h2>Vol {{ rate()!.flightNumber }} - {{ rate()!.company }}</h2>
+        <p class="flight-date">Date du vol : {{ rate()!.flightDate }}</p>
+        <p class="submitted-date">Avis soumis le : {{ formatDate(rate()!.submittedAt ?? '') }}</p>
+      </div>
+
+      <!-- Note et commentaire -->
+      <div class="rating-section">
+        <div class="stars">
+          @for (star of getStarArray(rate()!.rating); track $index) {
+            <span class="star" [class.filled]="star">★</span>
+          }
+          <span class="rating-text">{{ rate()!.rating }}/5</span>
+        </div>
+        
+        <div class="comment">
+          <h3>Commentaire</h3>
+          <p>{{ rate()!.comment }}</p>
+        </div>
+      </div>
+
+      <!-- Réponses -->
+      @if (rate()!.rateResponse && rate()!.rateResponse!.length > 0) {
+        <div class="responses">
+          <h3>Réponses de la compagnie</h3>
+          @for (response of rate()!.rateResponse; track response.id) {
+            <div class="response">
+              <p>{{ response.response }}</p>
+              <small>{{ formatDate(response.responseAt) }}</small>
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+  }
+</div>
